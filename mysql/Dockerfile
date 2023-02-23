@@ -1,0 +1,3 @@
+# mysql/Dockerfile
+
+FROM mysql

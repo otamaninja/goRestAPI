@@ -1,0 +1,31 @@
+version: "3"
+services:
+  golang:
+    build: ./golang/
+    image: image_golang
+    container_name: container_api
+    volumes:
+      - ./src:/go/src
+      # 証明書を/go/src/crtへ
+      #- /etc/letsencrypt:/go/src/crt
+    ports: 
+      #- "443:443"
+      - "8080:8080"
+    tty: true
+
+  mysql:
+    # platform: linux/x86_64 #AppleSiliconを使用時，必要
+    build: ./mysql/
+    image: image_mysql
+    container_name: container_db
+    volumes:
+      - ./mysql/db:/docker-entrypoint-initdb.d  #初期データをマウントする場所
+    environment: # コンテナ内のMySQLを起動する際のパスワードを設定
+      - MYSQL_DATABASE=golang      # 作成するデータベース名
+      - MYSQL_USER=akidon          # 作業ユーザー名（任意の値）
+      - MYSQL_PASSWORD=12345       # 作業ユーザーのパスワード（任意の値）
+      - MYSQL_ROOT_PASSWORD=root   # rootユーザーのパスワード(デフォルトでは「root」)
+    ports:
+      - "3306:3306"
+    tty: true
+    
